@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
+import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -26,6 +27,9 @@ public class CozinhaController {
 	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
+	
+	@Autowired
+	private CadastroCozinhaService cadastroCozinha;
 	
 	@GetMapping("")
 	public List<Cozinha> listar(){
@@ -43,11 +47,10 @@ public class CozinhaController {
 		return ResponseEntity.notFound().build();
 	}
 	
-	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public void adicionar(@RequestBody Cozinha cozinha) {
-		cozinhaRepository.salvar(cozinha);
+	public Cozinha adicionar(@RequestBody Cozinha cozinha) {
+		return cadastroCozinha.salvar(cozinha);
 	}
 	
 	@PutMapping("/{cozinhaId}")
@@ -75,6 +78,5 @@ public class CozinhaController {
 		} catch (DataIntegrityViolationException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
-		
 	}
 }
