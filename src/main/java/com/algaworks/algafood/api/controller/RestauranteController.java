@@ -60,7 +60,7 @@ public class RestauranteController {
 			Restaurante restauranteAtual =  restauranteService.buscar(restauranteId);
 			if(restauranteAtual == null)
 				return ResponseEntity.notFound().build();
-			
+			System.out.println(restauranteAtual.toString());
 			BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
 			restaurante = restauranteService.atualizar(restauranteAtual);
 			return ResponseEntity.ok(restaurante); 
