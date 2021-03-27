@@ -1,8 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +13,6 @@ import com.algaworks.algafood.domain.repository.RestauranteRepository;
 @Service
 public class CadastroRestauranteService {
 	
-	
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
@@ -23,11 +20,11 @@ public class CadastroRestauranteService {
 	private CozinhaRepository cozinhaRepository;
 	
 	public List<Restaurante> listar(){
-		return restauranteRepository.listar();
+		return restauranteRepository.findAll();
 	}
 	
 	public Restaurante buscar(Long id) {
-		return restauranteRepository.buscar(id);
+		return restauranteRepository.findById(id).orElse(null);
 	}
 	
 	public Restaurante salvar(Restaurante restaurante) {
@@ -38,7 +35,7 @@ public class CadastroRestauranteService {
 
 		restaurante.setCozinha(cozinha);
 		
-		return restauranteRepository.salvar(restaurante);
+		return restauranteRepository.save(restaurante);
 	}
 	
 	public Restaurante atualizar(Restaurante restaurante) {
@@ -48,6 +45,6 @@ public class CadastroRestauranteService {
 						String.format("Não foi possível encontrar cozinha com código %d", cozinhaId)));
 		
 		restaurante.setCozinha(cozinha);
-		return restauranteRepository.salvar(restaurante);
+		return restauranteRepository.save(restaurante);
 	}
 }
