@@ -32,7 +32,7 @@ public class CadastroCidadeService {
 	}
 	
 	public Cidade salvar(Cidade cidade) {
-		Estado estado = estadoRepository.buscar(cidade.getEstado().getId());
+		Estado estado = estadoRepository.findById(cidade.getEstado().getId()).orElse(null);
 		if(estado == null) 
 			throw new EntidadeNaoEncontradaException(
 					String.format("Não foi possível encontrar o estado com código %d", cidade.getEstado().getId()));
