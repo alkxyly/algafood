@@ -15,7 +15,6 @@ import com.algaworks.algafood.domain.repository.CozinhaRepository;
 @Repository
 public class CozinhaRepositoryImpl implements CozinhaRepository{
 	
-	
 	@PersistenceContext
 	private EntityManager manager;
 	
@@ -40,10 +39,16 @@ public class CozinhaRepositoryImpl implements CozinhaRepository{
 	@Transactional
 	public void remover(Long id) {
 		Cozinha cozinha = buscar(id);
-
 		if(cozinha == null)
 			throw new EmptyResultDataAccessException(1);
 		
 		manager.remove(cozinha);
+	}
+
+	@Override
+	public List<Cozinha> consultarPorNome(String nome) {
+		return manager.createQuery(" from Cozinha where nome like :nome", Cozinha.class)
+				.setParameter("nome", "%"+nome+"%")
+				.getResultList();
 	}
 }
