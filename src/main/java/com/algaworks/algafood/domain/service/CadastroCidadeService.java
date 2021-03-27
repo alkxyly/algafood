@@ -24,11 +24,11 @@ public class CadastroCidadeService {
 	
 	@GetMapping
 	public List<Cidade> listar(){
-		return cidadeRepository.listar();
+		return cidadeRepository.findAll();
 	}
 	
 	public Cidade buscar(Long cidadeId) {
-		return cidadeRepository.buscar(cidadeId);
+		return cidadeRepository.findById(cidadeId).orElse(null);
 	}
 	
 	public Cidade salvar(Cidade cidade) {
@@ -37,12 +37,12 @@ public class CadastroCidadeService {
 			throw new EntidadeNaoEncontradaException(
 					String.format("Não foi possível encontrar o estado com código %d", cidade.getEstado().getId()));
 		cidade.setEstado(estado);
-		return cidadeRepository.salvar(cidade);
+		return cidadeRepository.save(cidade);
 	}
 	
 	public void remover(Long cidadeId) {
 		try {
-			cidadeRepository.remover(cidadeId);
+			cidadeRepository.deleteById(cidadeId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
 					String.format("Não existe um cadastro de cidade com código %d", cidadeId));
