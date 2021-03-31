@@ -14,6 +14,9 @@ import com.algaworks.algafood.domain.model.Restaurante;
 public interface RestauranteRepository extends CustomJpaRepository<Restaurante, Long>,
 				RestauranteRepositoryQueries, JpaSpecificationExecutor<Restaurante> {
 	
+	@Query("from Restaurante r  join fetch r.cozinha")
+	List<Restaurante> findAll();
+	
 	List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 	
 //	@Query(" from Restaurante where nome like %:nome% and cozinha.id = :id")
