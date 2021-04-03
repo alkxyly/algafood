@@ -7,26 +7,16 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.CidadeNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
-import com.algaworks.algafood.domain.repository.EstadoRepository;
 
 @Service
 public class CadastroCidadeService {
 
-	private static final String MSG_ESTADO_NAO_ENCONTRADO 
-		= "Não foi possível encontrar o estado com código %d";
-
-	private static final String MSG_CIDADE_NAO_ENCONTRADA 
-		= "Não existe um cadastro de cidade com código %d";
-
 	@Autowired
 	private CidadeRepository cidadeRepository;
-	
-	@Autowired
-	private EstadoRepository estadoRepository;
 	
 	@Autowired
 	private CadastroEstadoService cadastroEstado;
@@ -50,15 +40,12 @@ public class CadastroCidadeService {
 		try {
 			cidadeRepository.deleteById(cidadeId);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(
-					String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
+			throw new CidadeNaoEncontradoException(cidadeId);
 		} 
 	}
-
 	
 	public Cidade buscarOuFalhar(Long cidadeId) {
 		return cidadeRepository.findById(cidadeId).orElseThrow(() -> 
-			new EntidadeNaoEncontradaException(
-					String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
+			new CidadeNaoEncontradoException(cidadeId));
 	}
 }
