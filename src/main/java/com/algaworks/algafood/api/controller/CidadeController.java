@@ -84,7 +84,7 @@ public class CidadeController {
 	}
 	
 	@ExceptionHandler(NegocioException.class)
-	public ResponseEntity<?> tratarNegocioEncontradoException(NegocioException e){
+	public ResponseEntity<?> tratarNegocioEncontradoException( NegocioException e){
 		Problema problema = Problema.builder()
 				.dataHora(LocalDateTime.now())
 				.mensagem(e.getMessage()).build();
