@@ -1,5 +1,5 @@
 package com.algaworks.algafood;
 
 public interface Groups {
-	public interface CadstroRestaurante{}
+	public interface CozinhaId{}
 }

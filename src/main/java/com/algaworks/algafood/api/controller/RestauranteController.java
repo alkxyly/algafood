@@ -55,7 +55,7 @@ public class RestauranteController {
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public Restaurante adicionar(
-			@RequestBody @Validated(Groups.CadstroRestaurante.class) Restaurante restaurante){
+			@RequestBody @Valid Restaurante restaurante){
 		try {
 			return restauranteService.salvar(restaurante);
 		} catch (EntidadeNaoEncontradaException e) {

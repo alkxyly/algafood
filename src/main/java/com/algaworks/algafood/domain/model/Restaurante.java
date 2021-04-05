@@ -21,6 +21,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -42,16 +44,17 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotBlank(groups =  Groups.CadstroRestaurante.class)
+	@NotBlank()
 	@Column(nullable = false)
 	private String nome;
 	
-	@PositiveOrZero(groups =  Groups.CadstroRestaurante.class)
+	@PositiveOrZero()
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
 	@Valid
-	@NotNull(groups =  Groups.CadstroRestaurante.class)
+	@NotNull
+	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cozinha_id",  nullable = false)
