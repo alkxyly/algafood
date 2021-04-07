@@ -20,7 +20,6 @@ import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
@@ -30,14 +29,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.algaworks.algafood.core.validation.Groups;
 import com.algaworks.algafood.core.validation.Multiplo;
 import com.algaworks.algafood.core.validation.TaxaFrete;
+import com.algaworks.algafood.core.validation.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity
+@ValorZeroIncluiDescricao(valorField = "taxaFrete",
+	descricaoField = "nome", descricaoObrigatoria = "Frete Grátis")
 @Data
+@Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Restaurante {
 
