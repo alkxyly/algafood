@@ -42,7 +42,6 @@ public class ValorZeroIncluiDescricaoValidator implements ConstraintValidator<Va
 		} catch (Exception e) {
 			throw new ValidationException(e);
 		}
-		
 	}
 
 }
