@@ -3,7 +3,6 @@ package com.algaworks.algafood;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ class CadastroCozinhaIntegrationTests {
 	
 	
 	@Test
-	public void testarCadastroCozinhaComSucesso() {
+	public void deveAtribuirId_QuandoCadastrarCozinhaComDadosCorretos() {
 		//cenário
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome("Chinesa");
@@ -38,7 +37,7 @@ class CadastroCozinhaIntegrationTests {
 	}
 	
 	@Test()
-	public void testarCadastroCozinhaSemNome() {
+	public void deveFalhar_QuandoCadastrarCozinhaSemNome() {
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome(null);
 		
