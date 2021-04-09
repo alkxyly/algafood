@@ -17,7 +17,6 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,10 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.algaworks.algafood.api.exceptionhandler.ValidacaoException;
-import com.algaworks.algafood.core.validation.Groups;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -92,7 +89,12 @@ public class RestauranteController {
 		
 		return atualizar(restauranteId, restauranteAtual);
 	}
-
+	
+	/**
+	 * Validação do BeanValidation programaticamente
+	 * @param restaurante
+	 * @param objectName
+	 */
 	private void validate(Restaurante restaurante, String objectName) {
 		BeanPropertyBindingResult bindResult = new BeanPropertyBindingResult(restaurante, objectName);
 		validator.validate(restaurante, bindResult);
@@ -102,6 +104,9 @@ public class RestauranteController {
 		}
 	}
 
+	/**
+	 * Realiza o merge das propriedades por reflexion
+	 */
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
 		
 		ServletServerHttpRequest serverHttpRequest = new ServletServerHttpRequest(request);
