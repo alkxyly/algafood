@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
@@ -43,6 +45,16 @@ class CadastroCozinhaIntegrationTests {
 		
 		assertThrows(ConstraintViolationException.class,
 				() -> cozinhaService.salvar(novaCozinha));
+	}
+	
+	@Test
+	public void deveFalhar_QuandoExcluirCozinhaEmUso() {
+		assertThrows(EntidadeEmUsoException.class, () -> cozinhaService.excluir(1L));		
+	}
+
+	@Test
+	public void deveFalhar_QuandoExcluirCozinhaInexistente() {
+		assertThrows(EntidadeNaoEncontradaException.class, () -> cozinhaService.excluir(100L));
 	}
 	
 	
