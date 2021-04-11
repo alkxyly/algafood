@@ -32,11 +32,11 @@ public class Cidade {
 	@NotBlank
 	private String nome;
 	
-	@ManyToOne
-	@JoinColumn(nullable = false)
 	@Valid
 	@NotNull
 	@ConvertGroup(from = Default.class, to = Groups.EstadoId.class)
+	@ManyToOne
+	@JoinColumn(nullable = false)
 	private Estado estado;
 
 }
