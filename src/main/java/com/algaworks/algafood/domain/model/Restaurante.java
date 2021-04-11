@@ -56,12 +56,12 @@ public class Restaurante {
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
+	@JsonIgnoreProperties(value = {"nome"}, allowGetters = true)
+	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@Valid
 	@NotNull
-	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
-	@JsonIgnoreProperties("hibernateLazyInitializer")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cozinha_id",  nullable = false)
+	@ManyToOne //(fetch = FetchType.LAZY)
+	@JoinColumn(name="cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	
 	@JsonIgnore
