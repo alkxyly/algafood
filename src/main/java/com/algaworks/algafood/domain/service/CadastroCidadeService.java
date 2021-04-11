@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradoException;
@@ -30,12 +31,14 @@ public class CadastroCidadeService {
 		return cidadeRepository.findById(cidadeId).orElse(null);
 	}
 	
+	@Transactional
 	public Cidade salvar(Cidade cidade) {
 		Estado estado = cadastroEstado.buscarOuFalhar(cidade.getEstado().getId());
 		cidade.setEstado(estado);
 		return cidadeRepository.save(cidade);
 	}
 	
+	@Transactional
 	public void remover(Long cidadeId) {
 		try {
 			cidadeRepository.deleteById(cidadeId);
