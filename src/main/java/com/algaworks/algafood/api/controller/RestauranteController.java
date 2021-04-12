@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.assembler.RestauranteModelAssembler;
 import com.algaworks.algafood.api.exceptionhandler.ValidacaoException;
 import com.algaworks.algafood.api.model.CozinhaModel;
 import com.algaworks.algafood.api.model.RestauranteModel;
@@ -47,18 +48,19 @@ public class RestauranteController {
 	@Autowired
 	private CadastroRestauranteService restauranteService;	
 
+	
 	@Autowired
-	private SmartValidator validator;
+	private RestauranteModelAssembler restauranteModelAssembler;
 	
 	@GetMapping
 	public List<RestauranteModel> listar(){
-		return toCollectionModel(restauranteService.listar());
+		return restauranteModelAssembler.toCollectionModel(restauranteService.listar());
 	}
 	
 	@GetMapping("/{restauranteId}")
 	public RestauranteModel buscar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		return toModel(restaurante);
+		return restauranteModelAssembler.toModel(restaurante);
 	}
 
 	@PostMapping
@@ -67,7 +69,7 @@ public class RestauranteController {
 			@RequestBody @Valid RestauranteInput restauranteInput){
 		try {
 			Restaurante restaurante = toDomainObject(restauranteInput);
-			return toModel(restauranteService.salvar(restaurante));
+			return restauranteModelAssembler.toModel(restauranteService.salvar(restaurante));
 		} catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
@@ -76,83 +78,21 @@ public class RestauranteController {
 	@PutMapping("/{restauranteId}")
 	public RestauranteModel atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput){
 		
-		Restaurante restaurante = toDomainObject(restauranteInput);
+		Restaurante restaurante = restauranteModelAssembler.toDomainObject(restauranteInput);
 		
 		Restaurante restauranteAtual =  restauranteService.buscarOuFalhar(restauranteId);
 
 		BeanUtils.copyProperties(restaurante, restauranteAtual, 
 				"id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 		try {
-			return toModel(restauranteService.salvar(restauranteAtual));
+			return restauranteModelAssembler.toModel(restauranteService.salvar(restauranteAtual));
 		} catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
 	
-	/**
-	 * Validação do BeanValidation programaticamente
-	 * @param restaurante
-	 * @param objectName
-	 */
-	private void validate(Restaurante restaurante, String objectName) {
-		BeanPropertyBindingResult bindResult = new BeanPropertyBindingResult(restaurante, objectName);
-		validator.validate(restaurante, bindResult);
-			
-		if(bindResult.hasErrors()) {
-			throw new ValidacaoException(bindResult);
-		}
-	}
 
-	/**
-	 * Realiza o merge das propriedades por reflexion
-	 */
-	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
-		
-		ServletServerHttpRequest serverHttpRequest = new ServletServerHttpRequest(request);
-		
-		try {
-			
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);
-			objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-			
-			Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
-			
-			dadosOrigem.forEach((nomePropriedade, valorPropriedade) ->{
-			
-			Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
-			field.setAccessible(true);
-			
-			Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
-			ReflectionUtils.setField(field, restauranteDestino, novoValor);
-			});
-		} catch (IllegalArgumentException e) {
-			Throwable rootCause = ExceptionUtils.getRootCause(e);
-			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest);
-		}
-	}
-	
-	private RestauranteModel toModel(Restaurante restaurante) {
-		RestauranteModel restauranteModel = new RestauranteModel();
-		restauranteModel.setId(restaurante.getId());
-		restauranteModel.setNome(restaurante.getNome());
-		restauranteModel.setTaxaFrete(restaurante.getTaxaFrete());
-		
-		CozinhaModel cozinhaModel = new CozinhaModel();
-		cozinhaModel.setId(restaurante.getCozinha().getId());
-		cozinhaModel.setNome(restaurante.getCozinha().getNome());
-		
-		restauranteModel.setCozinha(cozinhaModel);
-		return restauranteModel;
-	}
-	
-	private List<RestauranteModel> toCollectionModel(List<Restaurante> restaurantes){
-		return restaurantes.stream()
-				.map(restaurante -> toModel(restaurante))
-				.collect(Collectors.toList());
-	}
-	
-	private Restaurante toDomainObject (RestauranteInput restauranteInput) {
+	public Restaurante toDomainObject (RestauranteInput restauranteInput) {
 		Restaurante restaurante =  new Restaurante();
 		restaurante.setNome(restauranteInput.getNome());
 		restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
@@ -164,4 +104,5 @@ public class RestauranteController {
 		
 		return restaurante;
 	}
+	
 }
