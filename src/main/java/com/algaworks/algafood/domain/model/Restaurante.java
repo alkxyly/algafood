@@ -49,14 +49,14 @@ public class Restaurante {
 	@Column(nullable = false)
 	private String nome;
 	
-	@NotNull 
+//	@NotNull 
 	@TaxaFrete
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
-	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
-	@Valid
-	@NotNull
+//	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+//	@Valid
+//	@NotNull
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name="cozinha_id", nullable = false)
 	private Cozinha cozinha;
