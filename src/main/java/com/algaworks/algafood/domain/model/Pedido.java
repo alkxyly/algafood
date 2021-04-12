@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
-
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,11 +39,11 @@ public class Pedido {
 	private StatusPedido status;
 	
 	@CreationTimestamp
-	private LocalDateTime dataCriacao;
-	
-	private LocalDateTime dataConfirmacao;
-	private LocalDateTime dataCancelamento;
-	private LocalDateTime dataEntrega;
+	private OffsetDateTime dataCriacao;
+
+	private OffsetDateTime dataConfirmacao;
+	private OffsetDateTime dataCancelamento;
+	private OffsetDateTime dataEntrega;
 
 
 	@ManyToOne
