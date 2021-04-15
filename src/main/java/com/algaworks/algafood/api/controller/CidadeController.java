@@ -76,6 +76,7 @@ public class CidadeController {
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long cidadeId){
 		cadastroCidade.remover(cidadeId);
+		
 	}
 	
 }

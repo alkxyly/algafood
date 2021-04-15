@@ -80,4 +80,15 @@ public class Restaurante {
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos =  new ArrayList<>();
+	
+	
+	private boolean ativo = Boolean.TRUE;
+	
+	public void ativar() {
+		setAtivo(true);
+	}
+	
+	public void inativar() {
+		setAtivo(false);
+	}
 }
