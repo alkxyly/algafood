@@ -12,43 +12,28 @@ import com.algaworks.algafood.domain.model.StatusPedido;
 
 @Service
 public class FluxoPedidoService {
-	private static final String MSG_STATUS_INCORRETO = "Status do pedido %d não pode ser alterado de %s para %";
+	
+	private static final String MSG_STATUS_INCORRETO 
+		= "Status do pedido %d não pode ser alterado de %s para %";
+	
 	@Autowired
 	private EmissaoPedidoService emissaoPedidoService;
 	
 	@Transactional
 	public void confirmar(Long pedidoId) {
 		Pedido pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
-		
-		if(!pedido.getStatus().equals(StatusPedido.CRIADO))
-			throw new NegocioException(String.format(MSG_STATUS_INCORRETO,
-					pedido.getId(), pedido.getStatus(), StatusPedido.CONFIRMADO.getDescricao()));
-		
-		pedido.setStatus(StatusPedido.CONFIRMADO);
-		pedido.setDataConfirmacao(OffsetDateTime.now());
+		pedido.confirmar();
 	}
 	
 	@Transactional
 	public void entregar(Long pedidoId) {
 		Pedido pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
-		
-		if(!pedido.getStatus().equals(StatusPedido.CONFIRMADO))
-			throw new NegocioException(String.format(MSG_STATUS_INCORRETO,
-					pedido.getId(), pedido.getStatus(), StatusPedido.ENTREGUE.getDescricao()));
-		
-		pedido.setStatus(StatusPedido.ENTREGUE);
-		pedido.setDataConfirmacao(OffsetDateTime.now());
+		pedido.entregar();
 	}
 	
 	@Transactional
 	public void cancelar(Long pedidoId) {
 		Pedido pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
-		
-		if(!pedido.getStatus().equals(StatusPedido.CRIADO))
-			throw new NegocioException(String.format(MSG_STATUS_INCORRETO,
-					pedido.getId(), pedido.getStatus(), StatusPedido.CANCELADO.getDescricao()));
-		
-		pedido.setStatus(StatusPedido.CANCELADO);
-		pedido.setDataConfirmacao(OffsetDateTime.now());
+		pedido.cancelar();
 	}
 }
