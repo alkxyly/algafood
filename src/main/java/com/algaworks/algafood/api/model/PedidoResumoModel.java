@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@JsonFilter("pedidoFilter")
+//@JsonFilter("pedidoFilter")
 public class PedidoResumoModel {
 
 	private String codigo;
