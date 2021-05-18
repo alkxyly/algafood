@@ -18,22 +18,20 @@ import com.algaworks.algafood.api.model.input.FotoProdutoInput;
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
 public class RestauranteProdutoFotoController {
-
+	private final String PATH = "C:\\upload";
+	
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void atualizarFoto(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId,
 			@Valid FotoProdutoInput fotoProdutoInput) {
-		
-		var nomeArquivo = UUID.randomUUID().toString()
-				+"_"+ fotoProdutoInput.getArquivo().getOriginalFilename();
-		var arquivoFoto = Path.of("C:\\upload", nomeArquivo);
+	
 		try {
-			System.out.println(fotoProdutoInput.getDescricao());
-			System.out.println(arquivoFoto);
-			System.out.println(fotoProdutoInput.getArquivo().getContentType());
-			System.out.println(fotoProdutoInput.getArquivo().getOriginalFilename());
-			Files.createDirectories(Path.of("C:\\upload"));
+			var nomeArquivo = UUID.randomUUID().toString()
+					+"_"+ fotoProdutoInput.getArquivo().getOriginalFilename();
+			var arquivoFoto = Path.of(PATH, nomeArquivo);
+						Files.createDirectories(Path.of(PATH));
 			fotoProdutoInput.getArquivo().transferTo(arquivoFoto);
+				
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
