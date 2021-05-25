@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.repository.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
 import com.algaworks.algafood.domain.service.FotoStorageService;
+import com.algaworks.algafood.domain.service.FotoStorageService.FotoRecuperada;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
@@ -88,11 +90,20 @@ public class RestauranteProdutoFotoController {
 			
 			verificarCompatibilidadeMediaType(mediaTypeFoto, mediaTypesAceitas);
 			
-			InputStream inputStream = fotoStorageService.recuperar(foto.getNomeArquivo());
+			FotoRecuperada fotoRecuperada = fotoStorageService.recuperar(foto.getNomeArquivo());
+			InputStream inputStream = fotoRecuperada.getInputStream();
 			
-			return ResponseEntity.ok()
-					.contentType(mediaTypeFoto)
-					.body(new InputStreamResource(inputStream));
+			if(fotoRecuperada.temUrl()) {
+				return ResponseEntity
+						.status(HttpStatus.FOUND)
+						.header(HttpHeaders.LOCATION, fotoRecuperada.getUrl())
+						.build();
+			}else {
+				return ResponseEntity.ok()
+						.contentType(mediaTypeFoto)
+						.body(new InputStreamResource(inputStream));
+			}
+			
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
