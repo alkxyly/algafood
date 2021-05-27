@@ -17,21 +17,22 @@ public class FluxoPedidoController {
 	@Autowired
 	private FluxoPedidoService fluxoPedidoService;
 	
+	
 	@PutMapping("/confirmacao")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void confirmar(@PathVariable String codigoPedido) {
-		fluxoPedidoService.confirmar(codigoPedido);
+	public void confirmar(@PathVariable String pedidoId) {
+		fluxoPedidoService.confirmar(pedidoId);
 	}
 	
 	@PutMapping("/entrega")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void entregar(@PathVariable String codigoPedido) {
-		fluxoPedidoService.entregar(codigoPedido);
+	public void entregar(@PathVariable String pedidoId) {
+		fluxoPedidoService.entregar(pedidoId);
 	}
 	
 	@PutMapping("/cancelamento")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void cancelar(@PathVariable String codigoPedido) {
-		fluxoPedidoService.cancelar(codigoPedido);
+	public void cancelar(@PathVariable String pedidoId) {
+		fluxoPedidoService.cancelar(pedidoId);
 	}
 }
