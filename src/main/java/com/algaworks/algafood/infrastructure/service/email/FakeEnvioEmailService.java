@@ -1,7 +1,5 @@
 package com.algaworks.algafood.infrastructure.service.email;
 
-import com.algaworks.algafood.domain.service.EnvioEmailService;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
