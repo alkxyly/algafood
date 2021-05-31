@@ -1,65 +1,100 @@
-function consultarRestaurantes() {
-  $.ajax({
-    url: "http://localhost:8080/restaurantes",
-    type: "get",
-
-    success: function(response) {
-      $("#conteudo").text(JSON.stringify(response));
-    }
-  });
-}
-
-function fecharRestaurante() {
-  $.ajax({
-    url: "http://api.algafood.local:8080/restaurantes/1/fechamento",
-    type: "put",
-
-    success: function(response) {
-      alert("Restaurante foi fechado!");
-    }
-  });
-}
-
-
 function consultar() {
   $.ajax({
     url: "http://localhost:8080/formas-pagamento",
     type: "get",
 
     success: function(response) {
-	  console.log(JSON.stringify(response));
       preencherTabela(response);
     }
   });
 }
 
+function cadastrar() {
+  var formaPagamentoJson = JSON.stringify({
+    "descricao": $("#campo-descricao").val()
+  });
 
-function cadastrar(){
-	var formaPagamentoJson = JSON.stringify( {
-		"descricao": $("#campo-descricao").val()
-	});
-	
-	console.log(formaPagamentoJson);
-	
-	$.ajax({
-	    url: "http://localhost:8080/formas-pagamento",
-	    type: "post",
-		data: formaPagamentoJson,
-		contentType: "application/json",
-		
-	    success: function(response) {
-		   alert("Forma de Pagamento adicionada!");
-		   consultar();
-	    },
+ console.log(formaPagamentoJson);
 
-		error: function(error){
-			if(error.status == 400){
-				var problem = JSON.parse(error.responseText);
-				alert(problem.userMessage);
-			}else
-			    alert("Erro ao cadastrar forma de pagamento");
-		}
-  	});
+ if($("#btn-cadastrar").text() == "Cadastrar"){
+  $.ajax({
+    url: "http://localhost:8080/formas-pagamento",
+    type: "post",
+    data: formaPagamentoJson,
+    contentType: "application/json",
+
+    success: function(response) {
+      alert("Forma de pagamento adicionada!");
+      $("#campo-descricao").val("");
+      consultar();
+    },
+
+    error: function(error) {
+      if (error.status >= 400 && error.status <= 499) {
+        var problem = JSON.parse(error.responseText);
+        alert(problem.userMessage);
+      } else {
+        alert("Erro ao cadastrar forma de pagamento!");
+      }
+    }
+  });
+ }else{
+  id = $("#campo-id").val();
+  $.ajax({
+    url: "http://localhost:8080/formas-pagamento/"+id,
+    type: "put",
+    data: formaPagamentoJson,
+    contentType: "application/json",
+
+    success: function(response) {
+      alert("Forma de pagamento atualizada!");
+      consultar();
+      $("#campo-descricao").val("");
+      $("#btn-cadastrar").text("Cadastrar"); 
+    },
+
+    error: function(error) {
+      if (error.status >= 400 && error.status <= 499) {
+        var problem = JSON.parse(error.responseText);
+        alert(problem.userMessage);
+      } else {
+        alert("Erro ao atualizar forma de pagamento!");
+      }
+    }
+  });
+ }
+  
+}
+
+function excluir(formaPagamento) {
+  var url = "http://localhost:8080/formas-pagamento/" + formaPagamento.id;
+
+  $.ajax({
+    url: url,
+    type: "delete",
+
+    success: function(response) {
+      consultar();
+
+      alert("Forma de pagamento removida!");
+    },
+
+    error: function(error) {
+      // tratando todos os erros da categoria 4xx
+      if (error.status >= 400 && error.status <= 499) {
+        var problem = JSON.parse(error.responseText);
+        alert(problem.userMessage);
+      } else {
+        alert("Erro ao remover forma de pagamento!");
+      }
+    }
+  });
+}
+
+function editar(formaPagamento) {
+  $("#campo-descricao").val(formaPagamento.descricao);
+  $("#campo-id").val(formaPagamento.id);
+  $("#btn-cadastrar").text("Atualizar"); 
 }
 
 function preencherTabela(formasPagamento) {
@@ -68,14 +103,31 @@ function preencherTabela(formasPagamento) {
   $.each(formasPagamento, function(i, formaPagamento) {
     var linha = $("<tr>");
 
+    var linkExcluir = $("<a href='#'>")
+      .text("Excluir")
+      .click(function(event) {
+        event.preventDefault();
+        excluir(formaPagamento);
+      });
+
+      var linkAtualizar = $("<a href='#'>")
+      .text("Editar")
+      .click(function(event) {
+        event.preventDefault();
+        editar(formaPagamento);
+      });
+
     linha.append(
       $("<td>").text(formaPagamento.id),
-      $("<td>").text(formaPagamento.descricao)
+      $("<td>").text(formaPagamento.descricao),
+      $("<td>").append(linkExcluir),
+      $("<td>").append(linkAtualizar)
     );
 
     linha.appendTo("#tabela");
   });
 }
+
 
 $("#btn-consultar").click(consultar);
 $("#btn-cadastrar").click(cadastrar);

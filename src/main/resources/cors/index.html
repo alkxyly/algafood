@@ -1,4 +1,3 @@
-  
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,11 +23,13 @@
           <tr>
             <th>Código</th>
             <th>Descrição</th>
+            <th>Ações</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td colspan="2">Nenhuma forma de pagamento encontrada</td>
+            <td colspan="3">Nenhuma forma de pagamento encontrada</td>
           </tr>
         </tbody>
       </table>
@@ -38,6 +39,7 @@
       <form>
         <div class="form-group">
           <label for="campo-descricao">Descrição</label>
+          <input type="hidden" name="campo-id" id="campo-id" value="">
           <input type="text" class="form-control" id="campo-descricao">
         </div>
         <button type="button" class="btn btn-primary" id="btn-cadastrar">Cadastrar</button>
