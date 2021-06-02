@@ -1,11 +1,14 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,8 +39,15 @@ public class FormaPagamentoController {
 	private FormaPagamentoInputDisassembler formaPagamentoDisassembler;
 	
 	@GetMapping
-	public List<FormaPagamentoModel> listar(){
-		return formaPagamentoAssembler.toColletionModel(cadastroFormaPagamentoService.listar());
+	public ResponseEntity<List<FormaPagamentoModel>> listar() {
+		List<FormaPagamento> todasFormasPagamentos = cadastroFormaPagamentoService.listar();
+		
+		List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoAssembler.
+				toColletionModel(todasFormasPagamentos);
+		
+		return ResponseEntity.ok()
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				.body(formasPagamentosModel);
 	}
 	
 	@GetMapping("/{formaPagamentoId}")
