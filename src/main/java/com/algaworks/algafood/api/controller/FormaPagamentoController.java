@@ -40,17 +40,15 @@ public class FormaPagamentoController {
 	
 	@GetMapping
 	public ResponseEntity<List<FormaPagamentoModel>> listar() {
+		
 		List<FormaPagamento> todasFormasPagamentos = cadastroFormaPagamentoService.listar();
+		
 		
 		List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoAssembler.
 				toColletionModel(todasFormasPagamentos);
 		
 		return ResponseEntity.ok()
-//				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
-//				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
-//				.cacheControl(CacheControl.noCache())
-//				.cacheControl(CacheControl.noStore())
 				.body(formasPagamentosModel);
 	}
 	
