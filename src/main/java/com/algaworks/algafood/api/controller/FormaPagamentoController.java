@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import com.algaworks.algafood.api.assembler.FormaPagamentoInputDisassembler;
 import com.algaworks.algafood.api.assembler.FormaPagamentoModelAssembler;
 import com.algaworks.algafood.api.model.FormaPagamentoModel;
 import com.algaworks.algafood.api.model.input.FormaPagamentoInput;
 import com.algaworks.algafood.domain.model.FormaPagamento;
+import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 
 @RestController
@@ -38,17 +42,32 @@ public class FormaPagamentoController {
 	@Autowired
 	private FormaPagamentoInputDisassembler formaPagamentoDisassembler;
 	
+	@Autowired
+	private FormaPagamentoRepository formaPagamentoRepository;
+	
 	@GetMapping
-	public ResponseEntity<List<FormaPagamentoModel>> listar() {
+	public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
+		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+		String eTag = "0";
+		
+		OffsetDateTime ultimaDataAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
+		if(ultimaDataAtualizacao != null) {
+			eTag = String.valueOf(ultimaDataAtualizacao.toEpochSecond());
+		}
+			
+		if(request.checkNotModified(eTag)) {
+			return null;
+		}
 		
 		List<FormaPagamento> todasFormasPagamentos = cadastroFormaPagamentoService.listar();
-		
 		
 		List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoAssembler.
 				toColletionModel(todasFormasPagamentos);
 		
 		return ResponseEntity.ok()
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+				.eTag(eTag)
 				.body(formasPagamentosModel);
 	}
 	
