@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.CidadeInputDisassembler;
 import com.algaworks.algafood.api.assembler.CidadeModelAssembler;
+import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.api.model.CidadeModel;
 import com.algaworks.algafood.api.model.input.CidadeInput;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
@@ -28,6 +29,8 @@ import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 @Api(tags = "Cidades")
 @RestController
 @RequestMapping("/cidades")
@@ -49,6 +52,10 @@ public class CidadeController {
 	}
 	
 	@ApiOperation("Busca as cidades por id")
+	@ApiResponses({
+		@ApiResponse(code = 400, message = "ID cidade inválido", response = Problem.class),
+		@ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
+	})
 	@GetMapping("/{cidadeId}")
 	public CidadeModel buscar(@ApiParam(value = "ID de uma cidade", example = "1") @PathVariable Long cidadeId) {
 		var cidade = cadastroCidade.buscarOuFalhar(cidadeId);
@@ -57,6 +64,9 @@ public class CidadeController {
 	
 	@ApiOperation("Cadastra uma cidade")
 	@PostMapping
+	@ApiResponses({
+		@ApiResponse(code = 201, message = "Cidade cadastrada")
+	})
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public CidadeModel salvar(
 			@ApiParam(name = "corpo", value = "Representação de uma nova cidade")
@@ -71,6 +81,10 @@ public class CidadeController {
 	}
 	
 	@ApiOperation("Atualiza uma cidade por id")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Cidade atualizada", response = Problem.class),
+		@ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
+	})
 	@PutMapping("/{cidadeId}")
 	public CidadeModel atualizar(
 			@ApiParam(value = "ID de uma cidade", example = "1") 
