@@ -50,6 +50,6 @@ public interface CidadeControllerOpenApi {
 		@ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
 	})
 	public void remover(
-			@ApiParam(name = "corpo", value = "ID de uma cidade")
+			@ApiParam(value = "ID de uma cidade", example = "1")
 			Long cidadeId);
 }
