@@ -34,7 +34,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	
 	@Autowired
 	private GrupoModelAssembler grupoModelAssembler;
-	
+		
 	@Autowired
 	private GrupoInputDisassembler grupoInputDisassembler;
 	
