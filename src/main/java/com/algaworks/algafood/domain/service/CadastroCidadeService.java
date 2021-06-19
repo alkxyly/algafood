@@ -19,8 +19,10 @@ public class CadastroCidadeService {
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	
+	
 	@Autowired
 	private CadastroEstadoService cadastroEstado;
+	
 	
 	@GetMapping
 	public List<Cidade> listar(){

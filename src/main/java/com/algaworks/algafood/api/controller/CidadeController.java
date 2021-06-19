@@ -40,6 +40,7 @@ public class CidadeController implements CidadeControllerOpenApi{
 	@Autowired
 	private CidadeInputDisassembler cidadeInputDesassembler;
 	
+	
 	@GetMapping
 	public List<CidadeModel> listar(){
 		return cidadeModelAssembler.toCollectionModel(cadastroCidade.listar());

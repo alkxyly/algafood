@@ -126,4 +126,5 @@ class CadastroCozinhaIT {
 	    
 	    quantidadeCozinhasCadastradas = (int) cozinhaRepository.count();
 	}
+	
 }
