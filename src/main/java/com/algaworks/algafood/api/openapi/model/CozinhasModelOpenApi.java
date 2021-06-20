@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("CozinhasModel")
-public class CozinhasModelOpenApi extends PageModelOpenApi<CozinhaModel> {
+public class CozinhasModelOpenApi extends PagedModelOpenApi<CozinhaModel> {
 	
 }

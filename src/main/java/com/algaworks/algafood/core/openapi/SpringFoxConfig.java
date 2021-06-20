@@ -52,13 +52,6 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 				.globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
 				.globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
 				.globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-//				.globalOperationParameters(Arrays.asList(
-//						new ParameterBuilder().name("campos")
-//						.description("Nomes das propriedades para filtrar na resposta por vírgula")
-//						.parameterType("query")
-//						.modelRef(new ModelRef("string"))
-//						.build()
-//				))
 				.additionalModels(typeResolver.resolve(Problem.class))
 				.ignoredParameterTypes(ServletWebRequest.class)
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
@@ -69,7 +62,8 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 				.tags(new Tag("Cidades", "Gerencia as cidades"))
 				.tags(new Tag("Grupos", "Gerencia grupos de usuários"))
 				.tags(new Tag("Cozinhas", "Gerencia as cozinhas"))
-				.tags(new Tag("Formas de Pagamento", "Gerencia as formas de pagamento"));
+				.tags(new Tag("Formas de Pagamento", "Gerencia as formas de pagamento"))
+				.tags(new Tag("Pedidos", "Gerencia os pedidos"));
 	}
 
 	private List<ResponseMessage> globalPostPutResponseMessages() {
@@ -110,13 +104,13 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 	private List<ResponseMessage> globalGetResponseMessages(){
 		return Arrays.asList(
 				new ResponseMessageBuilder()
-				.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-				.message("Erro interno do servidor")
-				.build(),
+					.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+					.message("Erro interno do servidor")
+					.build(),
 				new ResponseMessageBuilder()
-				.code(HttpStatus.NOT_ACCEPTABLE.value())
-				.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
-				.build()
+					.code(HttpStatus.NOT_ACCEPTABLE.value())
+					.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
+					.build()
 				);
 	}
 
