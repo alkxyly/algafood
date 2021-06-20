@@ -33,6 +33,9 @@ import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 @RestController
 @RequestMapping(value = "/pedidos")
 public class PedidoController {
@@ -52,25 +55,10 @@ public class PedidoController {
     @Autowired
     private PedidoInputDisassembler pedidoInputDisassembler;
     
-//    @GetMapping
-//    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
-//        List<Pedido> todosPedidos = pedidoRepository.findAll();
-//        List<PedidoResumoModel> pedidosModel =  pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
-//        
-//        MappingJacksonValue pedidosWrapper = new MappingJacksonValue(pedidosModel);
-//        SimpleFilterProvider filterProvider =  new SimpleFilterProvider();
-//        filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter
-//        		.serializeAll());
-//        
-//        if(StringUtils.isNotBlank(campos)) {
-//        	filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(","))); 
-//        }
-//        
-//        
-//        pedidosWrapper.setFilters(filterProvider);
-//        return pedidosWrapper;
-//    }
-    
+    @ApiImplicitParams({
+    	@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
+    			name = "campos", paramType = "query", type = "string")
+    })
     @GetMapping
     public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, 
     		@PageableDefault(size = 10) Pageable pageable) {
@@ -84,6 +72,10 @@ public class PedidoController {
         return pedidoResumoModelPage;
     }
     
+    @ApiImplicitParams({
+    	@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
+    			name = "campos", paramType = "query", type = "string")
+    })
     @GetMapping("/{codigoPedido}")
     public PedidoModel buscar(@PathVariable String codigoPedido) {
         Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
