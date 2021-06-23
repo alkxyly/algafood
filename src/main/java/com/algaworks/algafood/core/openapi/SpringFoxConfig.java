@@ -22,7 +22,6 @@ import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
@@ -59,12 +58,13 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 						typeResolver.resolve(Page.class, CozinhaModel.class),
 						CozinhasModelOpenApi.class))
 				.apiInfo(apiInfo())
-				.tags(new Tag("Cidades", "Gerencia as cidades"))
-				.tags(new Tag("Grupos", "Gerencia grupos de usuários"))
-				.tags(new Tag("Cozinhas", "Gerencia as cozinhas"))
-				.tags(new Tag("Formas de Pagamento", "Gerencia as formas de pagamento"))
-				.tags(new Tag("Pedidos", "Gerencia os pedidos"))
-				.tags(new Tag("Restaurantes", "Gerencia os restaurantes"));
+				.tags(new Tag("Cidades", "Gerencia as cidades"),
+				        new Tag("Grupos", "Gerencia os grupos de usuários"),
+				        new Tag("Cozinhas", "Gerencia as cozinhas"),
+				        new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
+				        new Tag("Pedidos", "Gerencia os pedidos"),
+				        new Tag("Restaurantes", "Gerencia os restaurantes"),
+				        new Tag("Estados", "Gerencia os estados"));
 	}
 
 	private List<ResponseMessage> globalPostPutResponseMessages() {
