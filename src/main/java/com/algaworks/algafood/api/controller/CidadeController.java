@@ -46,48 +46,16 @@ public class CidadeController implements CidadeControllerOpenApi{
 	@Autowired
 	private CidadeInputDisassembler cidadeInputDesassembler;
 	
-	
+	@Override
 	@GetMapping
 	public CollectionModel<CidadeModel> listar(){
-		List<CidadeModel> cidadesModel = cidadeModelAssembler.toCollectionModel(cadastroCidade.listar());
-		
-		CollectionModel<CidadeModel> cidadesCollectionModel = new CollectionModel<>(cidadesModel);
-		
-		cidadesModel.forEach(cidadeModel -> {
-			Link link = linkTo(methodOn(CidadeController.class)
-					.buscar(cidadeModel.getId())).withSelfRel();
-			
-			cidadeModel.add(link);
-			
-			cidadeModel.add(linkTo(methodOn(CidadeController.class)
-					.listar()).withRel("cidades"));
-			
-			cidadeModel.getEstado().add(linkTo(methodOn(EstadoController.class)
-					.buscar(cidadeModel.getEstado().getId())).withSelfRel());
-		});
-		
-		cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
-		
-		return cidadesCollectionModel;
+		return cidadeModelAssembler.toCollectionModel(cadastroCidade.listar());
 	}
 	
 	@GetMapping("/{cidadeId}")
 	public CidadeModel buscar(@PathVariable Long cidadeId) {
 		var cidade = cadastroCidade.buscarOuFalhar(cidadeId);
-		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidade);
-		
-		Link link = linkTo(methodOn(CidadeController.class)
-				.buscar(cidadeModel.getId())).withSelfRel();
-		
-		cidadeModel.add(link);
-		
-		cidadeModel.add(linkTo(methodOn(CidadeController.class)
-				.listar()).withRel("cidades"));
-		
-		cidadeModel.getEstado().add(linkTo(methodOn(EstadoController.class)
-				.buscar(cidadeModel.getEstado().getId())).withSelfRel());
-		
-		return cidadeModel; 
+		return cidadeModelAssembler.toModel(cidade);
 	}
 	
 	@PostMapping
