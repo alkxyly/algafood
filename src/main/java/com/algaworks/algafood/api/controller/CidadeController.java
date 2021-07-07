@@ -8,8 +8,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,8 +48,27 @@ public class CidadeController implements CidadeControllerOpenApi{
 	
 	
 	@GetMapping
-	public List<CidadeModel> listar(){
-		return cidadeModelAssembler.toCollectionModel(cadastroCidade.listar());
+	public CollectionModel<CidadeModel> listar(){
+		List<CidadeModel> cidadesModel = cidadeModelAssembler.toCollectionModel(cadastroCidade.listar());
+		
+		CollectionModel<CidadeModel> cidadesCollectionModel = new CollectionModel<>(cidadesModel);
+		
+		cidadesModel.forEach(cidadeModel -> {
+			Link link = linkTo(methodOn(CidadeController.class)
+					.buscar(cidadeModel.getId())).withSelfRel();
+			
+			cidadeModel.add(link);
+			
+			cidadeModel.add(linkTo(methodOn(CidadeController.class)
+					.listar()).withRel("cidades"));
+			
+			cidadeModel.getEstado().add(linkTo(methodOn(EstadoController.class)
+					.buscar(cidadeModel.getEstado().getId())).withSelfRel());
+		});
+		
+		cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
+		
+		return cidadesCollectionModel;
 	}
 	
 	@GetMapping("/{cidadeId}")
