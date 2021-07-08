@@ -31,7 +31,7 @@ public class CidadeModelAssembler
 		
 		CidadeModel cidadeModel = createModelWithId(cidade.getId(), cidade);
 		modelMapper.map(cidade, cidadeModel);
-		
+			
 		cidadeModel.add(linkTo(methodOn(CidadeController.class)
 				.listar()).withRel("cidades"));
 		
