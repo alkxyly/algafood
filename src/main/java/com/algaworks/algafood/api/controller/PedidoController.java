@@ -1,5 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import com.algaworks.algafood.api.model.PedidoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.input.PedidoInput;
 import com.algaworks.algafood.api.openapi.controller.PedidoControllerOpenApi;
+import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -68,10 +71,13 @@ public class PedidoController implements PedidoControllerOpenApi {
     @GetMapping
     public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, 
             @PageableDefault(size = 10) Pageable pageable) {
-        pageable = traduzirPageable(pageable);
+        Pageable pageableTraduzido = traduzirPageable(pageable);
         
         Page<Pedido> pedidosPage = pedidoRepository.findAll(
-                PedidoSpecs.usandoFiltro(filtro), pageable);
+                PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
+        
+        pedidosPage = new PageWrapper<>(pedidosPage, pageable);
+        
         
         return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
     }
@@ -105,11 +111,17 @@ public class PedidoController implements PedidoControllerOpenApi {
     }
     
     private Pageable traduzirPageable(Pageable pageable) {
-    	var mapeamento = ImmutableMap.of(
-    			"codigo", "codigo",
-    			"restaurante.nome","restaurante.nome",
-    			"nomeCliente", "cliente.nome",
-    			"valorTotal", "valorTotal");
+    	var mapeamento = Map.of(
+				"codigo", "codigo",
+				"subtotal", "subtotal",
+				"taxaFrete", "taxaFrete",
+				"valorTotal", "valorTotal",
+				"dataCriacao", "dataCriacao",
+				"nomerestaurante", "restaurante.nome",
+				"restaurante.id", "restaurante.id",
+				"cliente.id", "cliente.id",
+				"cliente.nome", "cliente.nome"
+			);
     	return PageableTranslator.translate(pageable, mapeamento);
     }
 }           
