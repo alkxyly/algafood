@@ -124,4 +124,14 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
 		setCodigo(UUID.randomUUID().toString());
 	}
 
+	public boolean podeSerConfirmado() {
+		return getStatus().podeAlterarPara(status.CONFIRMADO);
+	}
+	
+	public boolean podeSerEntregue() {
+		return getStatus().podeAlterarPara(status.ENTREGUE);
+	}
+	public boolean podeSerCancelado() {
+		return getStatus().podeAlterarPara(status.CANCELADO);
+	}
 }
