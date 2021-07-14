@@ -15,7 +15,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 
 @Component
 public class CidadeModelAssembler 
-extends RepresentationModelAssemblerSupport<Cidade, CidadeModel>{
+		extends RepresentationModelAssemblerSupport<Cidade, CidadeModel>{
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -44,6 +44,7 @@ extends RepresentationModelAssemblerSupport<Cidade, CidadeModel>{
 
 	@Override
 	public CollectionModel<CidadeModel> toCollectionModel(Iterable<? extends Cidade> entities) {
-		return super.toCollectionModel(entities).add(linkTo(CidadeController.class).withSelfRel());
+	    return super.toCollectionModel(entities)
+	            .add(algaLinks.linkToCidades());
 	}
 }

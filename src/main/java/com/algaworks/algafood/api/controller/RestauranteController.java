@@ -6,8 +6,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.assembler.RestauranteApenasNomeModelAssembler;
+import com.algaworks.algafood.api.assembler.RestauranteBasicoModelAssembler;
 import com.algaworks.algafood.api.assembler.RestauranteInputDisassembler;
 import com.algaworks.algafood.api.assembler.RestauranteModelAssembler;
+import com.algaworks.algafood.api.model.RestauranteApenasNomeModel;
+import com.algaworks.algafood.api.model.RestauranteBasicoModel;
 import com.algaworks.algafood.api.model.RestauranteModel;
 import com.algaworks.algafood.api.model.input.RestauranteInput;
-import com.algaworks.algafood.api.model.view.RestauranteView;
 import com.algaworks.algafood.api.openapi.controller.RestauranteControllerOpenApi;
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradoException;
@@ -30,7 +35,6 @@ import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
-import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 @RequestMapping(path = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,25 +43,34 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Autowired
 	private CadastroRestauranteService restauranteService;	
 
-	
+
 	@Autowired
 	private RestauranteModelAssembler restauranteModelAssembler;
 
 	@Autowired
 	private RestauranteInputDisassembler restauranteInputDisassembler;
-	
-	@JsonView(RestauranteView.Resumo.class)
+
+	@Autowired
+	private RestauranteBasicoModelAssembler restauranteBasicoModelAssembler;
+
+	@Autowired
+	private RestauranteApenasNomeModelAssembler restauranteApenasNomeModelAssembler; 
+
+	@Override
 	@GetMapping
-	public List<RestauranteModel> listar(){
-		return restauranteModelAssembler.toCollectionModel(restauranteService.listar());
+	public CollectionModel<RestauranteBasicoModel> listar() {
+		return restauranteBasicoModelAssembler
+				.toCollectionModel(restauranteService.listar());
 	}
-	
-	@JsonView(RestauranteView.ApenasNome.class)
+
+	@Override
+	//		@JsonView(RestauranteView.ApenasNome.class)
 	@GetMapping(params = "projecao=apenas-nome")
-	public List<RestauranteModel> listarApenasNome(){
-		return restauranteModelAssembler.toCollectionModel(restauranteService.listar());
+	public CollectionModel<RestauranteApenasNomeModel> listarApenasNome() {
+		return restauranteApenasNomeModelAssembler
+				.toCollectionModel(restauranteService.listar());
 	}
-	
+
 	@GetMapping("/{restauranteId}")
 	public RestauranteModel buscar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
@@ -75,10 +88,10 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 			throw new NegocioException(e.getMessage());
 		}
 	}
-	
+
 	@PutMapping("/{restauranteId}")
 	public RestauranteModel atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput){
-		
+
 		Restaurante restauranteAtual =  restauranteService.buscarOuFalhar(restauranteId);
 		restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 		try {
@@ -87,31 +100,35 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 			throw new NegocioException(e.getMessage());
 		}
 	}
-	
+
 	@PutMapping("/{restauranteId}/ativo")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void ativar(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> ativar(@PathVariable Long restauranteId) {
 		restauranteService.ativar(restauranteId);
+		 return ResponseEntity.noContent().build();
 	}
-	
+
 	@DeleteMapping("/{restauranteId}/ativo")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void inativar(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> inativar(@PathVariable Long restauranteId) {
 		restauranteService.inativar(restauranteId);
+		 return ResponseEntity.noContent().build();
 	}
-	
+
 	@PutMapping("/{restauranteId}/fechamento")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void fechar(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> fechar(@PathVariable Long restauranteId) {
 		restauranteService.fechar(restauranteId);
+		 return ResponseEntity.noContent().build();
 	}
-	
+
 	@PutMapping("/{restauranteId}/abertura")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void abrir(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> abrir(@PathVariable Long restauranteId) {
 		restauranteService.abrir(restauranteId);
+		 return ResponseEntity.noContent().build();
 	}
-	
+
 	@PutMapping("/ativacoes")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
@@ -121,7 +138,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
-	
+
 	@DeleteMapping("/inativacoes")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
@@ -131,5 +148,5 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
-	
+
 }
