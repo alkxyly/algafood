@@ -21,6 +21,7 @@ public class RestauranteModelAssembler
     @Autowired
     private AlgaLinks algaLinks;
     
+    
     public RestauranteModelAssembler() {
         super(RestauranteController.class, RestauranteModel.class);
     }
