@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.assembler.ProdutoInputDisassembler;
 import com.algaworks.algafood.api.assembler.ProdutoModelAssembler;
 import com.algaworks.algafood.api.model.ProdutoModel;
@@ -46,20 +48,26 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     @Autowired
     private ProdutoRepository produtoRepository;
 	
-	@GetMapping
-	public List<ProdutoModel> listar(@PathVariable Long restauranteId,
-			@RequestParam(required = false) boolean incluirInativos) {
-		
-		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
-		List<Produto> todosProdutos = null;
-		
-		if(incluirInativos)
-			todosProdutos= produtoRepository.findTodosByRestaurante(restaurante);
-		else
-			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
-		
-		return produtoModelAssembler.toCollectionModel(todosProdutos);
-	}
+    @Autowired
+    private AlgaLinks algaLinks;
+
+    @Override
+    @GetMapping
+    public CollectionModel<ProdutoModel> listar(@PathVariable Long restauranteId,
+            @RequestParam(required = false, defaultValue = "false") Boolean incluirInativos) {
+        Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+        
+        List<Produto> todosProdutos = null;
+        
+        if (incluirInativos) {
+            todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
+        } else {
+            todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+        }
+        
+        return produtoModelAssembler.toCollectionModel(todosProdutos)
+                .add(algaLinks.linkToProdutos(restauranteId));
+    }
 	
 	@GetMapping("/{produtoId}")
 	public ProdutoModel buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
@@ -85,6 +93,5 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		produtoAtual = 	cadastroProdutoService.salvar(produtoAtual);
 		return produtoModelAssembler.toModel(produtoAtual);
 	}
-	
 	
 }
