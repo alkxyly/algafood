@@ -54,8 +54,6 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
 				.body(bytesPdf);
 	}
 	
-	
-
 	@Override
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public EstatisticasModel estatisticas() {
