@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.Links;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.api.model.CozinhaModel;
 import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.LinksModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
@@ -63,6 +65,7 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 						URI.class, URLStreamHandler.class, 
 						Resource.class, File.class, InputStream.class)
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+				.directModelSubstitute(Links.class, LinksModelOpenApi.class)
 				.alternateTypeRules(AlternateTypeRules.newRule(
 						typeResolver.resolve(Page.class, CozinhaModel.class),
 						CozinhasModelOpenApi.class))
@@ -83,21 +86,21 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 	private List<ResponseMessage> globalPostPutResponseMessages() {
 		return Arrays.asList(
 				new ResponseMessageBuilder()
-				.code(HttpStatus.BAD_REQUEST.value())
-				.message("Requisição inválida (erro do cliente)")
-				.responseModel(new ModelRef("Problema"))
+					.code(HttpStatus.BAD_REQUEST.value())
+					.message("Requisição inválida (erro do cliente)")
+					.responseModel(new ModelRef("Problema"))
 				.build(),
 				new ResponseMessageBuilder()
-				.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-				.message("Erro interno no servidor")
+					.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+					.message("Erro interno no servidor")
 				.build(),
 				new ResponseMessageBuilder()
-				.code(HttpStatus.NOT_ACCEPTABLE.value())
-				.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
+					.code(HttpStatus.NOT_ACCEPTABLE.value())
+					.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
 				.build(),
 				new ResponseMessageBuilder()
-				.code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
-				.message("Requisição recusada porque o corpo está em um formato não suportado")
+					.code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
+					.message("Requisição recusada porque o corpo está em um formato não suportado")
 				.build()
 				);
 	}
@@ -140,7 +143,7 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("swagger-ui.html")
-		.addResourceLocations("classpath:/META-INF/resources/");
+		.addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
 		registry.addResourceHandler("/webjars/**")
 		.addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
