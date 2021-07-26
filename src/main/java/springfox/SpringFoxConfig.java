@@ -28,14 +28,18 @@ import com.algaworks.algafood.api.model.CidadeModel;
 import com.algaworks.algafood.api.model.CozinhaModel;
 import com.algaworks.algafood.api.model.EstadoModel;
 import com.algaworks.algafood.api.model.FormaPagamentoModel;
+import com.algaworks.algafood.api.model.GrupoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
+import com.algaworks.algafood.api.model.PermissaoModel;
 import com.algaworks.algafood.api.openapi.model.CidadesModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.EstadosModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.FormasPagamentoModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.GruposModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.LinksModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PedidosResumoModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.PermissoesModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -76,7 +80,7 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 						Resource.class, File.class, InputStream.class)
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
 				.directModelSubstitute(Links.class, LinksModelOpenApi.class)
-				
+
 				.alternateTypeRules(AlternateTypeRules.newRule(
 						typeResolver.resolve(PagedModel.class, CozinhaModel.class),
 						CozinhasModelOpenApi.class))
@@ -86,47 +90,54 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 				.alternateTypeRules(AlternateTypeRules.newRule(
 						typeResolver.resolve(CollectionModel.class, CidadeModel.class),
 						CidadesModelOpenApi.class))
-				
+
 				.alternateTypeRules(AlternateTypeRules.newRule(
-				        typeResolver.resolve(CollectionModel.class, EstadoModel.class),
-				        EstadosModelOpenApi.class))
-				
+						typeResolver.resolve(CollectionModel.class, EstadoModel.class),
+						EstadosModelOpenApi.class))
+
 				.alternateTypeRules(AlternateTypeRules.newRule(
-					    typeResolver.resolve(CollectionModel.class, FormaPagamentoModel.class),
-					    FormasPagamentoModelOpenApi.class))
-				
+						typeResolver.resolve(CollectionModel.class, FormaPagamentoModel.class),
+						FormasPagamentoModelOpenApi.class))
+
+				.alternateTypeRules(AlternateTypeRules.newRule(
+						typeResolver.resolve(CollectionModel.class, GrupoModel.class),
+						GruposModelOpenApi.class))
+
+				.alternateTypeRules(AlternateTypeRules.newRule(
+						typeResolver.resolve(CollectionModel.class, PermissaoModel.class),
+						PermissoesModelOpenApi.class))
 				.apiInfo(apiInfo())
 				.tags(new Tag("Cidades", "Gerencia as cidades"),
-				        new Tag("Grupos", "Gerencia os grupos de usuários"),
-				        new Tag("Cozinhas", "Gerencia as cozinhas"),
-				        new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
-				        new Tag("Pedidos", "Gerencia os pedidos"),
-				        new Tag("Restaurantes", "Gerencia os restaurantes"),
-				        new Tag("Estados", "Gerencia os estados"),
-				        new Tag("Produtos", "Gerencia os produtos de restaurantes"),
-				        new Tag("Usuários", "Gerencia os usuários"),
-				        new Tag("Estatísticas", "Estatísticas da AlgaFood"),
-				        new Tag("Permissões", "Gerencia as permissões"));
+						new Tag("Grupos", "Gerencia os grupos de usuários"),
+						new Tag("Cozinhas", "Gerencia as cozinhas"),
+						new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
+						new Tag("Pedidos", "Gerencia os pedidos"),
+						new Tag("Restaurantes", "Gerencia os restaurantes"),
+						new Tag("Estados", "Gerencia os estados"),
+						new Tag("Produtos", "Gerencia os produtos de restaurantes"),
+						new Tag("Usuários", "Gerencia os usuários"),
+						new Tag("Estatísticas", "Estatísticas da AlgaFood"),
+						new Tag("Permissões", "Gerencia as permissões"));
 	}
 
 	private List<ResponseMessage> globalPostPutResponseMessages() {
 		return Arrays.asList(
 				new ResponseMessageBuilder()
-					.code(HttpStatus.BAD_REQUEST.value())
-					.message("Requisição inválida (erro do cliente)")
-					.responseModel(new ModelRef("Problema"))
+				.code(HttpStatus.BAD_REQUEST.value())
+				.message("Requisição inválida (erro do cliente)")
+				.responseModel(new ModelRef("Problema"))
 				.build(),
 				new ResponseMessageBuilder()
-					.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-					.message("Erro interno no servidor")
+				.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+				.message("Erro interno no servidor")
 				.build(),
 				new ResponseMessageBuilder()
-					.code(HttpStatus.NOT_ACCEPTABLE.value())
-					.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
+				.code(HttpStatus.NOT_ACCEPTABLE.value())
+				.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
 				.build(),
 				new ResponseMessageBuilder()
-					.code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
-					.message("Requisição recusada porque o corpo está em um formato não suportado")
+				.code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
+				.message("Requisição recusada porque o corpo está em um formato não suportado")
 				.build()
 				);
 	}
@@ -147,13 +158,13 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 	private List<ResponseMessage> globalGetResponseMessages(){
 		return Arrays.asList(
 				new ResponseMessageBuilder()
-					.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-					.message("Erro interno do servidor")
-					.build(),
+				.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+				.message("Erro interno do servidor")
+				.build(),
 				new ResponseMessageBuilder()
-					.code(HttpStatus.NOT_ACCEPTABLE.value())
-					.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
-					.build()
+				.code(HttpStatus.NOT_ACCEPTABLE.value())
+				.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
+				.build()
 				);
 	}
 
@@ -169,10 +180,10 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/**").addResourceLocations(
-                "classpath:/static/");
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations(
-                "classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations(
-                "classpath:/META-INF/resources/webjars/");
+				"classpath:/static/");
+		registry.addResourceHandler("swagger-ui.html").addResourceLocations(
+				"classpath:/META-INF/resources/");
+		registry.addResourceHandler("/webjars/**").addResourceLocations(
+				"classpath:/META-INF/resources/webjars/");
 	}
 }
