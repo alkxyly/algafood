@@ -30,6 +30,7 @@ import com.algaworks.algafood.api.model.FormaPagamentoModel;
 import com.algaworks.algafood.api.model.GrupoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.PermissaoModel;
+import com.algaworks.algafood.api.model.ProdutoModel;
 import com.algaworks.algafood.api.openapi.model.CidadesModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.EstadosModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.FormasPagamentoModelOpenApi;
@@ -38,6 +39,7 @@ import com.algaworks.algafood.api.openapi.model.LinksModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PedidosResumoModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PermissoesModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.ProdutosModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -82,9 +84,11 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 				.alternateTypeRules(AlternateTypeRules.newRule(
 					    typeResolver.resolve(PagedModel.class, PedidoResumoModel.class),
 					    PedidosResumoModelOpenApi.class))
+				
 				.alternateTypeRules(AlternateTypeRules.newRule(
 						typeResolver.resolve(Page.class, PedidoResumoModel.class),
 						PedidosResumoModelOpenApi.class))
+				
 				.alternateTypeRules(AlternateTypeRules.newRule(
 						typeResolver.resolve(CollectionModel.class, CidadeModel.class),
 						CidadesModelOpenApi.class))
@@ -104,6 +108,11 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 				.alternateTypeRules(AlternateTypeRules.newRule(
 						typeResolver.resolve(CollectionModel.class, PermissaoModel.class),
 						PermissoesModelOpenApi.class))
+				
+				.alternateTypeRules(AlternateTypeRules.newRule(
+					    typeResolver.resolve(CollectionModel.class, ProdutoModel.class),
+					    ProdutosModelOpenApi.class))
+				
 				.apiInfo(apiInfo())
 				.tags(new Tag("Cidades", "Gerencia as cidades"),
 						new Tag("Grupos", "Gerencia os grupos de usuários"),
@@ -118,70 +127,74 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 						new Tag("Permissões", "Gerencia as permissões"));
 	}
 
+	private List<ResponseMessage> globalGetResponseMessages() {
+		return Arrays.asList(
+				new ResponseMessageBuilder()
+					.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+					.message("Erro interno do servidor")
+					.responseModel(new ModelRef("Problema"))
+					.build(),
+				new ResponseMessageBuilder()
+					.code(HttpStatus.NOT_ACCEPTABLE.value())
+					.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
+					.build()
+			);
+	}
+	
 	private List<ResponseMessage> globalPostPutResponseMessages() {
 		return Arrays.asList(
 				new ResponseMessageBuilder()
-				.code(HttpStatus.BAD_REQUEST.value())
-				.message("Requisição inválida (erro do cliente)")
-				.responseModel(new ModelRef("Problema"))
-				.build(),
+					.code(HttpStatus.BAD_REQUEST.value())
+					.message("Requisição inválida (erro do cliente)")
+					.responseModel(new ModelRef("Problema"))
+					.build(),
 				new ResponseMessageBuilder()
-				.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-				.message("Erro interno no servidor")
-				.build(),
+					.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+					.message("Erro interno no servidor")
+					.responseModel(new ModelRef("Problema"))
+					.build(),
 				new ResponseMessageBuilder()
-				.code(HttpStatus.NOT_ACCEPTABLE.value())
-				.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
-				.build(),
+					.code(HttpStatus.NOT_ACCEPTABLE.value())
+					.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
+					.build(),
 				new ResponseMessageBuilder()
-				.code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
-				.message("Requisição recusada porque o corpo está em um formato não suportado")
-				.build()
-				);
+					.code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
+					.message("Requisição recusada porque o corpo está em um formato não suportado")
+					.responseModel(new ModelRef("Problema"))
+					.build()
+			);
 	}
-
+	
 	private List<ResponseMessage> globalDeleteResponseMessages() {
 		return Arrays.asList(
 				new ResponseMessageBuilder()
-				.code(HttpStatus.BAD_REQUEST.value())
-				.message("Requisição inválida (erro do cliente)")
-				.build(),
+					.code(HttpStatus.BAD_REQUEST.value())
+					.message("Requisição inválida (erro do cliente)")
+					.responseModel(new ModelRef("Problema"))
+					.build(),
 				new ResponseMessageBuilder()
-				.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-				.message("Erro interno no servidor")
-				.build()
-				);
+					.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+					.message("Erro interno no servidor")
+					.responseModel(new ModelRef("Problema"))
+					.build()
+			);
 	}
-
-	private List<ResponseMessage> globalGetResponseMessages(){
-		return Arrays.asList(
-				new ResponseMessageBuilder()
-				.code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-				.message("Erro interno do servidor")
-				.build(),
-				new ResponseMessageBuilder()
-				.code(HttpStatus.NOT_ACCEPTABLE.value())
-				.message("Recurso não possui representação que poderia ser aceita pelo consumidor")
-				.build()
-				);
-	}
-
-	public ApiInfo apiInfo() {
+	
+	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
 				.title("AlgaFood API")
-				.description("API aberta para  clientes e restaurantes")
-				.version("1.0.0")
-				.contact(new Contact("Algaworks", "http://algaworks.com.br", "contato@algaworks.com"))
+				.description("API aberta para clientes e restaurantes")
+				.version("1")
+				.contact(new Contact("AlgaWorks", "https://www.algaworks.com", "contato@algaworks.com"))
 				.build();
 	}
-
+	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/**").addResourceLocations(
-				"classpath:/static/");
-		registry.addResourceHandler("swagger-ui.html").addResourceLocations(
-				"classpath:/META-INF/resources/");
-		registry.addResourceHandler("/webjars/**").addResourceLocations(
-				"classpath:/META-INF/resources/webjars/");
+		registry.addResourceHandler("swagger-ui.html")
+			.addResourceLocations("classpath:/META-INF/resources/");
+		
+		registry.addResourceHandler("/webjars/**")
+			.addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 }
