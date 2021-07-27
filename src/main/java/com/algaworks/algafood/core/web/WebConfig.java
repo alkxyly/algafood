@@ -24,10 +24,4 @@ public class WebConfig  implements WebMvcConfigurer {
 	public Filter shallowEtagHeaderFilter() {
 		return new ShallowEtagHeaderFilter();
 	}
-	
-	@Override
-	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		//configurando media type padrao
-		configurer.defaultContentType(AlgaMediaTypes.V2_APPLICATION_JSON);
-	}
 }
