@@ -21,7 +21,7 @@ public class ModelMapperConfig {
 		var modelMapper = new ModelMapper();
 	
 		modelMapper.createTypeMap(CidadeInputV2.class, Cidade.class)
-		.addMappings(mappers -> mappers.skip(Cidade::setId));
+			.addMappings(mappers -> mappers.skip(Cidade::setId));
 	
 		
 //		modelMapper.createTypeMap(Restaurante.class, RestauranteModel.class)
