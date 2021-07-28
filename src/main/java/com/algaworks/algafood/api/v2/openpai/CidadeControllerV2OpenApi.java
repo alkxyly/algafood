@@ -31,7 +31,7 @@ public interface CidadeControllerV2OpenApi {
     @ApiResponses({
         @ApiResponse(code = 201, message = "Cidade cadastrada"),
     })
-    CidadeModelV2 adicionar(
+    CidadeModelV2 salvar(
             @ApiParam(name = "corpo", value = "Representação de uma nova cidade", required = true)
             CidadeInputV2 cidadeInput);
     
