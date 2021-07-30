@@ -13,8 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig  implements WebMvcConfigurer {
 	
-	@Autowired
-	private ApiRetirementHandler apiRetirementHandler;
+//	@Autowired
+//	private ApiRetirementHandler apiRetirementHandler;
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -29,8 +29,9 @@ public class WebConfig  implements WebMvcConfigurer {
 		return new ShallowEtagHeaderFilter();
 	}
 	
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(apiRetirementHandler);
-	}
+	//Removendo o interceptador para anular uma versão
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(apiRetirementHandler);
+//	}
 }
