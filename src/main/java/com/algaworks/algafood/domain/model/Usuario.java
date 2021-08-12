@@ -53,6 +53,10 @@ public class Usuario {
 	private Set<Grupo> grupos = new HashSet<>();
 	
 	
+	public boolean isNovo() {
+	    return getId() == null;
+	}
+	
 	public boolean senhaCoincideCom(String senha) {
 	    return getSenha().equals(senha);
 	}
