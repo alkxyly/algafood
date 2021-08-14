@@ -2,6 +2,8 @@ package com.algaworks.algafood.api.v1.controller;
 
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,7 @@ import com.algaworks.algafood.api.v1.model.PedidoResumoModel;
 import com.algaworks.algafood.api.v1.openapi.controller.PedidoControllerOpenApi;
 import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.filter.PedidoFilter;
@@ -35,7 +38,6 @@ import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
-import com.google.common.collect.ImmutableMap;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -61,6 +63,9 @@ public class PedidoController implements PedidoControllerOpenApi {
     
     @Autowired
     private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
+    
+    @Autowired
+    private AlgaSecurity algaSecurity;
     
     @ApiImplicitParams({
     	@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
@@ -92,23 +97,23 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pedidoModelAssembler.toModel(pedido);
     }          
     
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public PedidoModel adicionar(@RequestBody PedidoInput pedidoInput) {
-    	  try {
-    	        Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
+    @Override
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public PedidoModel adicionar(@Valid @RequestBody PedidoInput pedidoInput) {
+		try {
+			Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
 
-    	        // TODO pegar usuário autenticado
-    	        novoPedido.setCliente(new Usuario());
-    	        novoPedido.getCliente().setId(1L);
+			novoPedido.setCliente(new Usuario());
+			novoPedido.getCliente().setId(algaSecurity.getUsuarioId());
 
-    	        novoPedido = emissaoPedido.emitir(novoPedido);
+			novoPedido = emissaoPedido.emitir(novoPedido);
 
-    	        return pedidoModelAssembler.toModel(novoPedido);
-    	    } catch (EntidadeNaoEncontradaException e) {
-    	        throw new NegocioException(e.getMessage(), e);
-    	    }
-    }
+			return pedidoModelAssembler.toModel(novoPedido);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
+	}
     
     private Pageable traduzirPageable(Pageable pageable) {
     	var mapeamento = Map.of(
