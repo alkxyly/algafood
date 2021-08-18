@@ -30,6 +30,7 @@ import com.algaworks.algafood.api.v1.openapi.controller.PedidoControllerOpenApi;
 import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.core.security.AlgaSecurity;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.filter.PedidoFilter;
@@ -46,58 +47,56 @@ import io.swagger.annotations.ApiImplicitParams;
 @RequestMapping(path = "/v1/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PedidoController implements PedidoControllerOpenApi {
 
-    @Autowired
-    private PedidoRepository pedidoRepository;
-    
-    @Autowired
-    private EmissaoPedidoService emissaoPedido;
-    
-    @Autowired
-    private PedidoModelAssembler pedidoModelAssembler;
-    
-    @Autowired
-    private PedidoResumoModelAssembler pedidoResumoModelAssembler;
-    
-    @Autowired
-    private PedidoInputDisassembler pedidoInputDisassembler;
-    
-    @Autowired
-    private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
-    
-    @Autowired
-    private AlgaSecurity algaSecurity;
-    
-    @ApiImplicitParams({
-    	@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
-    			name = "campos", paramType = "query", type = "string")
-    })
+	@Autowired
+	private PedidoRepository pedidoRepository;
 
-    @Override
-    @GetMapping
-    public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, 
-            @PageableDefault(size = 10) Pageable pageable) {
-        Pageable pageableTraduzido = traduzirPageable(pageable);
-        
-        Page<Pedido> pedidosPage = pedidoRepository.findAll(
-                PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
-        
-        pedidosPage = new PageWrapper<>(pedidosPage, pageable);
-        
-        
-        return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
-    }
-    
-    @ApiImplicitParams({
-    	@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
-    			name = "campos", paramType = "query", type = "string")
-    })
-    @GetMapping("/{codigoPedido}")
-    public PedidoModel buscar(@PathVariable String codigoPedido) {
-        Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
-        return pedidoModelAssembler.toModel(pedido);
-    }          
-    
-    @Override
+	@Autowired
+	private EmissaoPedidoService emissaoPedido;
+
+	@Autowired
+	private PedidoModelAssembler pedidoModelAssembler;
+
+	@Autowired
+	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+
+	@Autowired
+	private PedidoInputDisassembler pedidoInputDisassembler;
+
+	@Autowired
+	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
+
+	@Autowired
+	private AlgaSecurity algaSecurity;
+
+	@ApiImplicitParams({
+		@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
+				name = "campos", paramType = "query", type = "string")
+	})
+
+	@Override
+	@GetMapping
+	public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, 
+			@PageableDefault(size = 10) Pageable pageable) {
+		Pageable pageableTraduzido = traduzirPageable(pageable);
+
+		Page<Pedido> pedidosPage = pedidoRepository.findAll(
+				PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
+
+		pedidosPage = new PageWrapper<>(pedidosPage, pageable);
+
+
+		return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
+	}
+
+	@CheckSecurity.Pedidos.PodeBuscar
+	@Override
+	@GetMapping("/{codigoPedido}")
+	public PedidoModel buscar(@PathVariable String codigoPedido) {
+		Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
+		return pedidoModelAssembler.toModel(pedido);
+	}          
+
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public PedidoModel adicionar(@Valid @RequestBody PedidoInput pedidoInput) {
@@ -114,9 +113,9 @@ public class PedidoController implements PedidoControllerOpenApi {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
-    
-    private Pageable traduzirPageable(Pageable pageable) {
-    	var mapeamento = Map.of(
+
+	private Pageable traduzirPageable(Pageable pageable) {
+		var mapeamento = Map.of(
 				"codigo", "codigo",
 				"subtotal", "subtotal",
 				"taxaFrete", "taxaFrete",
@@ -126,7 +125,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 				"restaurante.id", "restaurante.id",
 				"cliente.id", "cliente.id",
 				"cliente.nome", "cliente.nome"
-			);
-    	return PageableTranslator.translate(pageable, mapeamento);
-    }
+				);
+		return PageableTranslator.translate(pageable, mapeamento);
+	}
 }           
