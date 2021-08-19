@@ -68,11 +68,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 	@Autowired
 	private AlgaSecurity algaSecurity;
 
-	@ApiImplicitParams({
-		@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
-				name = "campos", paramType = "query", type = "string")
-	})
-
+	@CheckSecurity.Pedidos.PodePesquisar
 	@Override
 	@GetMapping
 	public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, 
