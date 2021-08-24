@@ -47,5 +47,12 @@ public interface FormaPagamentoControllerOpenApi {
 			@ApiParam(name = "corpo", value = "Representação de uma forma de pagamento com os novos dados", 
 			required = true)
 			FormaPagamentoInput formaPagamentoInput);
+	
+	@ApiOperation("Exclui uma forma de pagamento por ID")
+	@ApiResponses({
+		@ApiResponse(code = 204, message = "Forma de pagamento excluída"),
+		@ApiResponse(code = 404, message = "Forma de pagamento não encontrada", response = Problem.class)
+	})
+	public void remover(Long formaPagamentoId);
 
 }
