@@ -30,7 +30,7 @@ public @interface CheckSecurity {
 		@Target(METHOD)
 		@PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_RESTAURANTES')")
 		public @interface PodeGerenciarCadastro {}
-		
+
 		@PreAuthorize("hasAuthority('SCOPE_WRITE') and "
 				+ "(hasAuthority('EDITAR_RESTAURANTES') or "
 				+ "@algaSecurity.gerenciaRestaurante(#restauranteId))")
@@ -43,10 +43,10 @@ public @interface CheckSecurity {
 		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
 		public @interface PodeConsultar {}
 	}
-	
+
 	public @interface Pedidos{
 
-		
+
 		@PreAuthorize("hasAuthority('SCOPE_READ') and  isAuthenticated()")
 		@PostAuthorize("hasAuthority('CONSULTAR_PEDIDOS') or"
 				+ "@algaSecurity.getUsuarioId() == returnObject.cliente.id or"
@@ -54,8 +54,8 @@ public @interface CheckSecurity {
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodeBuscar {}
-		
-		
+
+
 		@PreAuthorize("hasAuthority('SCOPE_READ') and "
 				+ "(hasAuthority('CONSULTAR_PEDIDOS') or "
 				+ "@algaSecurity.emitiuPedido(#filtro.clienteId) or"
@@ -63,7 +63,7 @@ public @interface CheckSecurity {
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodePesquisar {}
-		
+
 		@PreAuthorize("hasAuthority('SCOPE_WRITE') and isAuthenticated()")
 		@Retention(RUNTIME)
 		@Target(METHOD)
@@ -76,20 +76,46 @@ public @interface CheckSecurity {
 		public @interface PodeGerenciarPedidos {
 		}
 	}
-	
+
 	public @interface FormasPagamento {
 
-	    @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_FORMAS_PAGAMENTO')")
-	    @Retention(RUNTIME)
-	    @Target(METHOD)
-	    public @interface PodeEditar { }
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_FORMAS_PAGAMENTO')")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeEditar { }
 
-	    @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
-	    @Retention(RUNTIME)
-	    @Target(METHOD)
-	    public @interface PodeConsultar { }
-	    
+		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeConsultar { }
+
 	}
 
+	public @interface Cidades {
 
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_CIDADES')")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeEditar { }
+
+		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeConsultar { }
+
+	}
+
+	public @interface Estados {
+
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_ESTADOS')")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeEditar { }
+
+		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeConsultar { }
+
+	}
 }
