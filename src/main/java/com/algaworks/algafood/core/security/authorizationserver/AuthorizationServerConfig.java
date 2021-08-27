@@ -1,5 +1,7 @@
 package com.algaworks.algafood.core.security.authorizationserver;
 
+import java.security.KeyPair;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 
 import javax.sql.DataSource;
@@ -7,10 +9,8 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -25,12 +25,14 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
+
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter{
-	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -82,7 +84,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		security.checkTokenAccess("permitAll()")
 				.tokenKeyAccess("permitAll()")
 				.allowFormAuthenticationForClients();
-//				.allowFormAuthenticationForClients();
 	}
 	
 	@Override
@@ -112,13 +113,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Bean
 	public JwtAccessTokenConverter jwtAceAccessTokenConverter() {
 		var jwtAccessTokenConverter =  new JwtAccessTokenConverter();
-		
 
-		var keyStoreKeyFactory = new KeyStoreKeyFactory(jwtKeyStoreProperties.getJksLocation(),
-				jwtKeyStoreProperties.getPassword().toCharArray());
-		var keyPair = keyStoreKeyFactory.getKeyPair(jwtKeyStoreProperties.getKeypairAlias());
-		
-		jwtAccessTokenConverter.setKeyPair(keyPair);
+		jwtAccessTokenConverter.setKeyPair(keyPair());
 		
 		return jwtAccessTokenConverter;
 	}
@@ -132,6 +128,22 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				pkceAuthorizationCodeTokenGranter, endpoints.getTokenGranter());
 		
 		return new CompositeTokenGranter(granters);
+	}
+	
+	@Bean
+	public JWKSet jwkSet() {
+		RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) keyPair().getPublic())
+				.keyUse(KeyUse.SIGNATURE)
+				.algorithm(JWSAlgorithm.RS256)
+				.keyID("algafood-key-id");
+		return new JWKSet(builder.build());
+	}
+	
+	private KeyPair keyPair() {
+		var keyStoreKeyFactory = new KeyStoreKeyFactory(jwtKeyStoreProperties.getJksLocation(),
+				jwtKeyStoreProperties.getPassword().toCharArray());
+		var keyPair = keyStoreKeyFactory.getKeyPair(jwtKeyStoreProperties.getKeypairAlias());
+		return keyPair;
 	}
 	
 }
