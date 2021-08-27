@@ -18,7 +18,7 @@ public class NotificacaoClientePedidoConfirmadoListener {
 	public void aoConfirmarPedido(PedidoConfirmadoEvent event) {
 		var mensagem  = Mensagem.builder()
 			.assunto(event.getPedido().getRestaurante().getNome() + " - Pedido Confirmado")
-			.corpo("pedido-confirmado.html")
+			.corpo("emails/pedido-confirmado.html")
 			.variavel("pedido", event.getPedido())
 			.destinatario(event.getPedido().getCliente().getEmail())
 			.build();

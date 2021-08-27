@@ -87,12 +87,6 @@
 			<version>${modelmapper.version}</version>
 		</dependency>
 
-		<!-- <dependency> -->
-		<!-- <groupId>com.nimbusds</groupId> -->
-		<!-- <artifactId>oauth2-oidc-sdk</artifactId> -->
-		<!-- <version>6.21.2</version> -->
-		<!-- </dependency> -->
-
 		<dependency>
 			<groupId>com.github.bohnman</groupId>
 			<artifactId>squiggly-filter-jackson</artifactId>
@@ -223,6 +217,11 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-jwt</artifactId>
 			<version>${spring-security-jwt.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
 	</dependencies>

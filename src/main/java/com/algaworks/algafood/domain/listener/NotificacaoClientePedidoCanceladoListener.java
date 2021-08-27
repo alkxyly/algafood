@@ -18,7 +18,7 @@ public class NotificacaoClientePedidoCanceladoListener {
 	public void aoCancelarPedido(PedidoCanceladoEvent event) {
 		var mensagem  = Mensagem.builder()
 			.assunto(event.getPedido().getRestaurante().getNome() + " - Pedido Cancelado")
-			.corpo("pedido-cancelado.html")
+			.corpo("emails/pedido-cancelado.html")
 			.variavel("pedido", event.getPedido())
 			.destinatario(event.getPedido().getCliente().getEmail())
 			.build();
