@@ -15,3 +15,9 @@
 
 6. Ao configurar esse plugin poderá buildar com o comando abaixo
    mvnw clean package -Pdocker
+
+7. Enviando imagem para o docker hub
+  docker image tag algafoood-api:latest alkxyly/algafood-api:latest
+  
+8. Subir/Parar Containers com docker compose
+   docker compose up/down 
