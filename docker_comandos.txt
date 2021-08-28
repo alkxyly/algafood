@@ -1,0 +1,11 @@
+1. Gerando o artefato jar do projeto
+   mvnw clean package
+
+2.Buildando a imagem descrita no arquivo Dockerfile
+  docker image build -t algafood-api .
+
+3. Executando o container do mysql
+  docker container run -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root --network algafood-network --name algafood-mysql mysql:8.0
+
+4. Executando imagem criada em rede criada com o nome algafood-network
+  docker container run --rm -p 8080:8080 -e DB_HOST=algafood-mysql --network algafood-network algafood-api
