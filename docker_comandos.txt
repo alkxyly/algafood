@@ -9,3 +9,9 @@
 
 4. Executando imagem criada em rede criada com o nome algafood-network
   docker container run --rm -p 8080:8080 -e DB_HOST=algafood-mysql --network algafood-network algafood-api
+
+5. Configurar Build da Imagem com comando maven
+  https://github.com/spotify/dockerfile-maven 
+
+6. Ao configurar esse plugin poderá buildar com o comando abaixo
+   mvnw clean package -Pdocker
