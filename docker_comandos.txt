@@ -18,6 +18,12 @@
 
 7. Enviando imagem para o docker hub
   docker image tag algafoood-api:latest alkxyly/algafood-api:latest
-  
+
+# Docker Compose  
 8. Subir/Parar Containers com docker compose
    docker compose up/down 
+
+9. Criar várias instancias de um container
+   docker-compose up --scale algafood-api=2
+
+   
