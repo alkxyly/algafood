@@ -1,12 +1,14 @@
 ## Curso Especialista Spring Rest - Algaworks
 
+**Descrição**
+
 Um curso que vai desde o desenvolvimento de apis até o deploy em um ambiente real. Nesse curso podemos trabalhar com todos os pilares no desenvolvimento de apis, conta com a parte de boas práticas, testes end-to-end, segurança oauth2 (entendendo todos os fluxos de autenticação e implementando um authorization server a parte), e aplicação em containers docker.
 
 **Repositórido do Authorization Server com Spring Security**
 
 *  https://github.com/alkxyly/algafood-auth
 
-**Execução utilizando Docker**
+**Execução  e testando a aplicação utilizando Docker**
 
 1. Gerando o build do projeto Spring
 ```maven
