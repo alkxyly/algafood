@@ -36,4 +36,7 @@
  keys *  -> Consulta as chaves
 
 
+Authorization_Code
+http://localhost:8080/oauth/authorize?client_id=foodanalytics&redirect_uri=http://www.foodanalytics.local:8082&response_type=code
+
    
