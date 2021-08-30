@@ -7,6 +7,9 @@
 3. Executando o container do mysql
   docker container run -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root --network algafood-network --name algafood-mysql mysql:8.0
 
+3.1 Listando containers
+	docker container ls
+
 4. Executando imagem criada em rede criada com o nome algafood-network
   docker container run --rm -p 8080:8080 -e DB_HOST=algafood-mysql --network algafood-network algafood-api
 
@@ -25,5 +28,12 @@
 
 9. Criar várias instancias de um container
    docker-compose up --scale algafood-api=2
+
+#Redis
+10. Acessando Client redis
+ docker container run --rm -it --network algafood-api_algafood-network redis:6.2.1-alpine sh
+ redis-cli -h algafood-redis  -p 6379
+ keys *  -> Consulta as chaves
+
 
    
