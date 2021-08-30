@@ -32,6 +32,13 @@ Um curso que vai desde o desenvolvimento de apis até o deploy em um ambiente re
 
 * http://localhost:8080/oauth/authorize?client_id=foodanalytics&redirect_uri=http://www.foodanalytics.local:8082&response_type=code
 
+## Requerimentos
+* Java 11
+* Spring Tool Suite 4 (IDE utilizada)
+* Docker
+* Client Mysql - consultar os dados (Mysql Workbench, utilizado)
+* Postman
+
 ## **Diagrama implementado no Curso:**
 
 ![WhatsApp Image 2021-08-30 at 09 51 28](https://user-images.githubusercontent.com/4734174/131342016-b45a48fb-20a7-4587-9cc9-90fb1a69676a.jpeg)
