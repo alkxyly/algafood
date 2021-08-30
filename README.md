@@ -22,6 +22,7 @@ Um curso que vai desde o desenvolvimento de apis até o deploy em um ambiente re
   mvnw package -Pdocker
 ```
 4. Subindo as imagens com o docker-compose escalando com dois container do algafood-api para testar o balanceamento de carga implementado com nginx
+* Foi utilizado a lib wait-for-it, usada para esperar o processo do mysql terminar de subir, disponível em: https://github.com/vishnubob/wait-for-it
 ```maven
   docker-compose up --scale algafood-api=2
 ```
