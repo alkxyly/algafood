@@ -23,7 +23,7 @@ Um curso que vai desde o desenvolvimento de apis até o deploy em um ambiente re
 ```
 4. Subindo as imagens com o docker-compose escalando com dois container do algafood-api para testar o balanceamento de carga implementado com nginx
 ```maven
-  mvnw package -Pdocker
+  docker-compose up --scale algafood-api=2
 ```
 
 ## **Diagrama implementado no Curso:**
