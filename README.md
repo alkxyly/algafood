@@ -17,7 +17,7 @@ Um curso que vai desde o desenvolvimento de apis até o deploy em um ambiente re
 ```maven
   docker image build -t algafood-api .
 ```
-3. Opcionalmente pode ser gerado os passos 1 e 2 com um único comando, abaixo:
+3. Opcionalmente pode ser gerado os passos 1 e 2 com um único comando, foi implementado usado a lib Dockerfile Maven, disponível em: https://github.com/spotify/dockerfile-maven
 ```maven
   mvnw package -Pdocker
 ```
