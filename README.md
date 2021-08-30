@@ -28,7 +28,7 @@ Um curso que vai desde o desenvolvimento de apis até o deploy em um ambiente re
 ```maven
   docker-compose up --scale algafood-api=2
 ```
-## Testando o fluxo com Oauth (authorization_code)
+## Testando o fluxo com OAuth2 (authorization_code)
 
 * http://localhost:8080/oauth/authorize?client_id=foodanalytics&redirect_uri=http://www.foodanalytics.local:8082&response_type=code
 
