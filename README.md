@@ -39,7 +39,16 @@ Um curso que vai desde o desenvolvimento de apis até o deploy em um ambiente re
 * Client Mysql - consultar os dados (Mysql Workbench, utilizado)
 * Postman
 
-## **Diagrama implementado no Curso:**
+## Em Produção
+São todas  ferramentas utilizadas para fazer o deploy no ambiente de produção;
+
+* Amazon RDS (Relational Database Service gerenciado) - Banco de dados Mysql
+* Redis - Regis Lab https://redis.com/
+* Amazon S3 - Storage, armazenamento de imagens
+* AWS Fargate - Containers Docker
+* Amazon Elastic Container Registry (ECR) - Serviço para hospedar as imagens docker
+
+## **Diagrama de Classes:**
 
 ![WhatsApp Image 2021-08-30 at 09 51 28](https://user-images.githubusercontent.com/4734174/131342016-b45a48fb-20a7-4587-9cc9-90fb1a69676a.jpeg)
 
