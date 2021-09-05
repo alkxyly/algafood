@@ -55,7 +55,42 @@ São todas  ferramentas utilizadas para fazer o deploy no ambiente de produção
 	3. Configurar as Credenciais - aws configure	
 	4. Executar os comando com Push commands disponível.
 	
-	
+
+## Definição de variáveis de ambiente
+``` 
+DB_HOST =
+SPRING_DATASOURCE_USERNAME =
+SPRING_DATASOURCE_PASSWORD =
+
+SPRING_REDIS_HOST =  
+SPRING_REDIS_PORT =  
+SPRING_REDIS_PASSWORD =
+
+LOGGING_LOGGLY_TOKEN =
+
+ALGAFOOD_JWT_KEYSTORE_JKS_LOCATION = 
+ALGAFOOD_JWT_KEYSTORE_PASSWORD =
+ALGAFOOD_JWT_KEYSTORE_KEYPAIR_ALIAS = 
+
+ALGAFOOD_STORAGE_S3_ID_CHAVE_ACESSO = 
+ALGAFOOD_STORAGE_S3_CHAVE_ACESSO_SECRETA = 
+ALGAFOOD_STORAGE_S3_BUCKET = 
+ALGAFOOD_STORAGE_S3_REGIAO =
+
+ALGAFOOD_EMAIL_REMETENTE = 
+SPRING_MAIL_HOST = 
+SPRING_MAIL_PORT = 
+SPRING_MAIL_USERNAME = 
+SPRING_MAIL_PASSWORD = 	```
+
+## Gerando arquivo jks com um par de chaves
+```
+keytool -genkeypair -alias algafood -keyalg RSA -keypass (senha) -keystore algafood-prod.jks -storepass (senha) -validity 3650
+```
+##Codificando o conteúdo do arquivo JKS em Base64
+```
+cat algafood-prod.jks | base64
+```
 
 ## **Diagrama de Classes:**
 
