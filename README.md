@@ -46,7 +46,16 @@ São todas  ferramentas utilizadas para fazer o deploy no ambiente de produção
 * Redis - Regis Lab https://redis.com/
 * Amazon S3 - Storage, armazenamento de imagens
 * AWS Fargate - Containers Docker
-* Amazon Elastic Container Registry (ECR) - Serviço para hospedar as imagens docker
+* Amazon Elastic Container Registry (ECR) - Serviço para hospedar as imagens docker, descrição abaixo:
+
+	Configurando o Amazon ECR
+	
+	1. Baixar o AWS CLI	
+	2. Criar usuário especifico	
+	3. Configurar as Credenciais - aws configure	
+	4. Executar os comando com Push commands disponível.
+	
+	
 
 ## **Diagrama de Classes:**
 
